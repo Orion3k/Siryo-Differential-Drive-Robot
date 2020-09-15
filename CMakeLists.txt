@@ -7,7 +7,12 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
-  tf
-  geometry_msgs)
+  geometry_msgs
+  tf  )
 
+catkin_package()
 
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(OdometryPosition src/OdometryPosition.cpp)
+target_link_libraries(OdometryPosition ${catkin_LIBRARIES})

@@ -1,4 +1,4 @@
-./*
+/*
    Siryo motor controller
 */
 
@@ -130,10 +130,6 @@ void loop()
 {
   nh.spinOnce();
 
-  str_msg.data = "Ok";
-  chatter.publish( &str_msg );
-  
-
   if ((millis() - lastMilli) >= LOOPTIME)
   { // enter timed loop
     lastMilli = millis();
@@ -144,15 +140,16 @@ void loop()
         digitalWrite(LED_BUILTIN,LOW);
       }
     
-
-    if (abs(pos_left) < 5) {                                                  //Avoid taking in account small disturbances
+    //compute actual speed for left wheel
+    if (abs(pos_left) < 5) {                //Avoid taking in account small disturbances
       speed_act_left = 0;
     }
     else {
       speed_act_left = ((pos_left / encoder_cpr) * 2 * PI) * (1000 / LOOPTIME) * radius; // calculate speed of left wheel
     }
-
-    if (abs(pos_right) < 5) {                                                 //Avoid taking in account small disturbances
+    
+    //compute actual speed for right wheel
+    if (abs(pos_right) < 5) {               //Avoid taking in account small disturbances
       speed_act_right = 0;
     }
     else {
@@ -167,19 +164,19 @@ void loop()
     // compute PWM value for left motor. Check constant definition comments for more information.
     PWM_leftMotor = constrain(((speed_req_left + sgn(speed_req_left) * min_speed_cmd) / speed_to_pwm_ratio) + (speed_cmd_left / speed_to_pwm_ratio), -255, 255); //
 
-    if (noCommLoops >= noCommLoopMax) {                   //Stopping if too much time without command
+    if (noCommLoops >= noCommLoopMax) {      //Stopping if too much time without command
       leftMotor.setSpeed(0);
       leftMotor.run(L298N::STOP);
     }
-    else if (speed_req_left == 0) {                       //Stopping
+    else if (speed_req_left == 0) {                //Stopping
       leftMotor.setSpeed(0);
       leftMotor.run(L298N::STOP);
     }
-    else if (PWM_leftMotor > 0) {                         //Going forward
+    else if (PWM_leftMotor > 0) {                  //Going forward
       leftMotor.setSpeed(abs(PWM_leftMotor));
       leftMotor.run(L298N::BACKWARD);
     }
-    else {                                               //Going backward
+    else {                                         //Going backward
       leftMotor.setSpeed(abs(PWM_leftMotor));
       leftMotor.run(L298N::FORWARD);
     }
@@ -207,7 +204,8 @@ void loop()
     }
 
     if ((millis() - lastMilli) >= LOOPTIME) {     //write an error if execution time of the loop in longer than the specified looptime
-      Serial.println("XL");
+      str_msg.data = "XL";
+      chatter.publish( &str_msg );
     }
 
     noCommLoops++;
