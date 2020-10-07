@@ -10,11 +10,12 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/time.h>
 
-#define PIN_ENCOD_A_L  2               //A channel for encoder of left motor                    
-#define PIN_ENCOD_B_L 4               //B channel for encoder of left motor
+#define MINROTATION 5
+#define PIN_ENCOD_A_L  2              //A channel for encoder of left motor                    
+#define PIN_ENCOD_B_L 4             //B channel for encoder of left motor
 
-#define PIN_ENCOD_A_R 3              //A channel for encoder of right motor         
-#define PIN_ENCOD_B_R 5              //B channel for encoder of right motor
+#define PIN_ENCOD_A_R 3             //A channel for encoder of right motor         
+#define PIN_ENCOD_B_R 5             //B channel for encoder of right motor
 
 #define ENAR 11
 #define INR1 10
@@ -36,7 +37,7 @@ const double radius = 0.0325;                 //Wheel radius, in m
 const double wheelbase = 0.194;               //Wheelbase, in m
 const double encoder_cpr = 20;                //Encoder ticks or counts per rotation
 const double speed_to_pwm_ratio = 0.0036;    //Ratio to convert speed (in m/s) to PWM value. It was obtained by plotting the wheel speed in relation to the PWM motor command (the value is the slope of the linear function).
-const double min_speed_cmd = 0.414;          //(min_speed_cmd/speed_to_pwm_ratio) is the minimum command value needed for the motor to start moving. This value was obtained by plotting the wheel speed in relation to the PWM motor command (the value is the constant of the linear function).
+const double min_speed_cmd = 0.522;          //(min_speed_cmd/speed_to_pwm_ratio) is the minimum command value needed for the motor to start moving. This value was obtained by plotting the wheel speed in relation to the PWM motor command (the value is the constant of the linear function).
 
 
 double speed_req = 0;                         //Desired linear speed for the robot, in m/s
@@ -55,8 +56,8 @@ int PWM_leftMotor = 0;                     //PWM command for left motor
 int PWM_rightMotor = 0;                    //PWM command for right motor
 
 // PID Parameters
-const double PID_left_param[] = { 0.3, 0.1, 0 }; //Respectively Kp, Ki and Kd for left motor PID
-const double PID_right_param[] = { 0.3, 0.1, 0 }; //Respectively Kp, Ki and Kd for right motor PID
+const double PID_left_param[] = { 0.7, 0.2, 0 }; //Respectively Kp, Ki and Kd for left motor PID
+const double PID_right_param[] = { 0.7, 0.2, 0 }; //Respectively Kp, Ki and Kd for right motor PID
 
 volatile float pos_left = 0;       //Left motor encoder position
 volatile float pos_right = 0;      //Right motor encoder position
@@ -109,15 +110,15 @@ void setup()
 
 
   // Define the rotary encoder for left motor
-  pinMode(PIN_ENCOD_A_L, INPUT);
-  pinMode(PIN_ENCOD_B_L, INPUT);
+  pinMode(PIN_ENCOD_A_L, INPUT_PULLUP);
+  pinMode(PIN_ENCOD_B_L, INPUT_PULLUP);
   digitalWrite(PIN_ENCOD_A_L, HIGH);                // turn on pullup resistor
   digitalWrite(PIN_ENCOD_B_L, HIGH);
   attachInterrupt(0, encoderLeftMotor, RISING);
 
   // Define the rotary encoder for right motor
-  pinMode(PIN_ENCOD_A_R, INPUT);
-  pinMode(PIN_ENCOD_B_R, INPUT);
+  pinMode(PIN_ENCOD_A_R, INPUT_PULLUP);
+  pinMode(PIN_ENCOD_B_R, INPUT_PULLUP);
   digitalWrite(PIN_ENCOD_A_R, HIGH);                // turn on pullup resistor
   digitalWrite(PIN_ENCOD_B_R, HIGH);
   attachInterrupt(1, encoderRightMotor, RISING);
@@ -141,7 +142,7 @@ void loop()
       }
     
     //compute actual speed for left wheel
-    if (abs(pos_left) < 5) {                //Avoid taking in account small disturbances
+    if (abs(pos_left) < MINROTATION) {                //Avoid taking in account small disturbances
       speed_act_left = 0;
     }
     else {
@@ -149,7 +150,7 @@ void loop()
     }
     
     //compute actual speed for right wheel
-    if (abs(pos_right) < 5) {               //Avoid taking in account small disturbances
+    if (abs(pos_right) < MINROTATION) {               //Avoid taking in account small disturbances
       speed_act_right = 0;
     }
     else {
@@ -230,7 +231,7 @@ void publishSpeed(double time) {
 }
 
 
-//Left motor encoder counter (Right direction: clockwise)
+//Left motor encoder counter (Right direction: counter-clockwise)
 void encoderLeftMotor() {
   if (digitalRead(PIN_ENCOD_A_L) == digitalRead(PIN_ENCOD_B_L)) {
     pos_left++;
@@ -239,12 +240,12 @@ void encoderLeftMotor() {
   }
 }
 
-//Right motor encoder counter (Right direction: counter-clockwise)
+//Right motor encoder counter (Right direction: clockwise)
 void encoderRightMotor() {
-  if (digitalRead(PIN_ENCOD_A_R) == digitalRead(PIN_ENCOD_B_R)) {
-    pos_right--;
-  } else {
+  if (digitalRead(PIN_ENCOD_A_R) != digitalRead(PIN_ENCOD_B_R)) {
     pos_right++;
+  } else {
+    pos_right--;
   }
 }
 

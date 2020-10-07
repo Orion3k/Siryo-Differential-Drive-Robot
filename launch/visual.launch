@@ -1,5 +1,5 @@
 <launch>
 
-<node name="rviz" pkg="rviz" type="rviz" args="-d $(find siryo)/rviz/rplidar.rviz" />
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find Siryo_Motor_Controller)/rviz/rplidar.rviz" />
 
 </launch>

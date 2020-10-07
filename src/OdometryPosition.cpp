@@ -44,8 +44,8 @@ class Odom_class{
         vl = (msg->vector.y + msg->vector.x) / 2;
 
         theta = theta + va * dt;
-        x = x + vl * sin(theta) * dt;
-        y = y + vl * cos(theta) * dt;
+        x = x + vl * cos(theta) * dt;
+        y = y + vl * sin(theta) * dt;
         
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
