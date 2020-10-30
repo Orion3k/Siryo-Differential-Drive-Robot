@@ -18,6 +18,8 @@
     </node>
 
     <node pkg="tf" type="static_transform_publisher" name="robot_base_to_laser" args="-0.02 -0.01 0.13 3.14159265 0 0 robot_base laser 100" />
+    <node pkg="tf" type="static_transform_publisher" name="imu_base_to_robot_base" args="0 0 0 0 0 0 imu_base robot_base 100" />
+
 
     <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py">
     	<param name="cmd_vel" type="string" value="cmd_vel"/>

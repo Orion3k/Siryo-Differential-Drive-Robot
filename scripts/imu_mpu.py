@@ -7,6 +7,8 @@ from geometry_msgs.msg import Vector3
 sensor = mpu6050(0x68)
 
 def get_data():
+	#sensor.set_accel_range(accel_range=sensor.ACCEL_RANGE_2G)
+	#sensor.set_gyro_range(gyro_range=sensor.GYRO_RANGE_250DEG)
 	i = Imu()
 	i.header.stamp = rospy.Time.now()
 	i.header.frame_id = 'imu_base'

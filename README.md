@@ -25,3 +25,7 @@ ROS Packages used:
 - teleop_twist_keyboard
 - tf
 - rosserial_python
+
+credits:
+mpu6050-raspberrypi ($ pip install mpu6050-raspberrypi)
+L298N library (github: https://github.com/AndreaLombardo/L298N)
