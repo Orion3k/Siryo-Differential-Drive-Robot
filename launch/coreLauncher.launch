@@ -13,12 +13,18 @@
   <param name="angle_compensate"    type="bool"   value="true"/>
   </node>
 
- 
+
     <node name="OdometryPosition" pkg="siryo" type="OdometryPosition" >
-        <param name="robot_base_L" type="double" value="0.194"/>
+    <param name="robot_base_L" type="double" value="0.194"/>
     </node>
     
-    <node pkg="tf" type="static_transform_publisher" name="robot_base_to_laser" args="-0.02 -0.01 0.13 3.14159265 0 0 robot_base laser 100" />
-    <node pkg="tf" type="static_transform_publisher" name="imu_base_to_robot_base" args="0 0 0 0 0 0 imu_base robot_base 100" />
+    <node name="imu_node" pkg="siryo" type="imu_mpu.py">
+    </node>
+
+
+    <node pkg="tf" type="static_transform_publisher" name="robot_link_to_laser" args="-0.02 -0.01 0.13 3.14159265 0 0 robot_link laser 100" />
+    <node pkg="tf" type="static_transform_publisher" name="robot_link_to_imu_base" args="0 0 0 0 0 0 robot_link imu_base 10" />
+
+    <include file="$(find siryo)/launch/localiz.launch" />
 
 </launch>

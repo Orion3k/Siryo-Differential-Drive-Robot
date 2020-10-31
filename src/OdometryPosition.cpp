@@ -16,12 +16,12 @@ class Odom_class{
         ros::Time current_time, last_time;
         geometry_msgs::Quaternion odom_quat;
         float dt, x ,y, z, vl, va, L, R, theta;
-        
+
     public:
         Odom_class(){
-		
+
             speed_sub = nh.subscribe("/speed",1000,&Odom_class::encodersCallback,this);
-            odom_pub = nh.advertise<nav_msgs::Odometry>("odom",1000);
+            odom_pub = nh.advertise<nav_msgs::Odometry>("wheel_encoders/odom",1000);
             last_time = ros::Time::now();
             nh.getParam("/robot_base_L",L);
             theta = 0;
@@ -36,8 +36,8 @@ class Odom_class{
 
 
     void encodersCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg){
-        
-        //odometry        
+
+        //odometry
         dt = msg->vector.z;
         va = (msg->vector.y - msg->vector.x)/L;
         R = (L* (msg->vector.y + msg->vector.x) )/(2 * (msg->vector.y - msg->vector.x) );
@@ -46,11 +46,11 @@ class Odom_class{
         theta = theta + va * dt;
         x = x + vl * cos(theta) * dt;
         y = y + vl * sin(theta) * dt;
-        
+
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
-        odom.header.frame_id = "map";
-        odom.child_frame_id = "robot_base";
+        odom.header.frame_id = "robot_odom_base";
+        odom.child_frame_id = "robot_link";
         odom_quat = tf::createQuaternionMsgFromYaw(theta);
         //set pose
         odom.pose.pose.position.x = x;
@@ -67,8 +67,7 @@ class Odom_class{
         transform.setOrigin(tf::Vector3(x,y,z));
         q.setRPY(0,0,theta);
         transform.setRotation(q);
-        tf_pub.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "robot_base"));
-   
+        //tf_pub.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "robot_odom_base"));
  }
 
 };

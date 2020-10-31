@@ -25,6 +25,10 @@ ROS Packages used:
 - teleop_twist_keyboard
 - tf
 - rosserial_python
+- ros navigation stack
+- robot_localization
+-slam_gmapping
+-amcl
 
 credits:
 mpu6050-raspberrypi ($ pip install mpu6050-raspberrypi)

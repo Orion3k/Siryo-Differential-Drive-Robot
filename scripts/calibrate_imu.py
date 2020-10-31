@@ -70,19 +70,19 @@ class Calibration:
 		for z in self.gyr_z:
 			gyr_var[2] += (z - gyr_mean[2])**2
 
-		acc_var[0] = acc_var[0]/(self.n_samples-1)
-		acc_var[1] = acc_var[1]/(self.n_samples-1)
-		acc_var[2] = acc_var[2]/(self.n_samples-1)
-		gyr_var[0] = gyr_var[0]/(self.n_samples-1)
-		gyr_var[1] = gyr_var[1]/(self.n_samples-1)
-		gyr_var[2] = gyr_var[2]/(self.n_samples-1)
+		acc_var[0] = acc_var[0]/(self.n_samples)
+		acc_var[1] = acc_var[1]/(self.n_samples)
+		acc_var[2] = acc_var[2]/(self.n_samples)
+		gyr_var[0] = gyr_var[0]/(self.n_samples)
+		gyr_var[1] = gyr_var[1]/(self.n_samples)
+		gyr_var[2] = gyr_var[2]/(self.n_samples)
 
 		print("acc mean: ",acc_mean, "acc var: ",acc_var)
 		print("gyro mean : ", gyr_mean, "gyro var: ", gyr_var)
 
 	def sub_imu_data(self):
 		rospy.init_node('calibrate_imu',anonymous=True)
-		imu_sub = rospy.Subscriber('imu_odom',Imu,self.callback)
+		imu_sub = rospy.Subscriber('imu/data',Imu,self.callback)
 		rospy.spin()
 
 if __name__ == '__main__':

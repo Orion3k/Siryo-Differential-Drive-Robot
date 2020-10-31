@@ -1,28 +1,10 @@
 <launch>
-<node name="arduino" pkg="rosserial_arduino" type="serial_node.py" >
-    <param name="port" type="string" value="/dev/ttyACM0"/>
-    <param name="baud" type="int" value="57600"/>
-</node>
+    <!-- launch siryo core nodes-->
+    <include file="$(find siryo)/launch/coreLauncher.launch" />
 
-<!-- RPLidar-->
-  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
-  <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
-  <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
-  <param name="frame_id"            type="string" value="laser"/>
-  <param name="inverted"            type="bool"   value="false"/>
-  <param name="angle_compensate"    type="bool"   value="true"/>
-  </node>
-
-
-    <node name="OdometryPosition" pkg="siryo" type="OdometryPosition" >        <param name="robot_base_L" type="double" value="0.194"/>
-    </node>
-
-    <node pkg="tf" type="static_transform_publisher" name="robot_base_to_laser" args="-0.02 -0.01 0.13 3.14159265 0 0 robot_base laser 100" />
-    <node pkg="tf" type="static_transform_publisher" name="imu_base_to_robot_base" args="0 0 0 0 0 0 imu_base robot_base 100" />
-
-
+    <!-- launch teleop keyboard commands-->
     <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py">
-    	<param name="cmd_vel" type="string" value="cmd_vel"/>
+    <param name="cmd_vel" type="string" value="cmd_vel"/>
     </node>
 
 </launch>
