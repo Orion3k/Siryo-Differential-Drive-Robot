@@ -14,7 +14,7 @@
   </node>
 
 
-    <node name="OdometryPosition" pkg="siryo" type="OdometryPosition" >
+    <node name="EncodersOdometry" pkg="siryo" type="EncodersOdometry" >
     <param name="robot_base_L" type="double" value="0.194"/>
     </node>
     
