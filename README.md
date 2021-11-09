@@ -1,4 +1,4 @@
-# Siryo-Differential-Drive-Robot
+# Siryo
 A cute differential drive Robot
 
 GENERAL SYSTEM SETTINGS
