@@ -84,11 +84,11 @@ void setRequestedSpeed (const geometry_msgs::Twist& cmd_vel) {
 
 ros::Subscriber<geometry_msgs::Twist> cmd_vel("cmd_vel", setRequestedSpeed);   //create a subscriber to ROS topic for velocity commands (will execute "handle_cmd" function when receiving data)
 geometry_msgs::Vector3Stamped speed_msg;                                //create a "speed_msg" ROS message
-ros::Publisher speed_pub("speed", &speed_msg);                          //create a publisher to ROS topic "speed" using the "speed_msg" type
+ros::Publisher speed_pub("/wheels_speed", &speed_msg);                          //create a publisher to ROS topic "speed" using the "speed_msg" type
 
 
 std_msgs::String str_msg;
-ros::Publisher chatter("chatter", &str_msg);
+ros::Publisher chatter("/chatter", &str_msg);
 
 
 void setup()
@@ -252,3 +252,4 @@ void encoderRightMotor() {
 template <typename T> int sgn(T val) {
   return (T(0) < val) - (val < T(0));
 }
+

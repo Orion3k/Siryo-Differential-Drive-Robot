@@ -22,7 +22,7 @@ def get_data():
 	l_acel = Vector3()
 	l_acel.x = l_acel_dic['x'] - acc_mean[0]
 	l_acel.y = l_acel_dic['y'] - acc_mean[1]
-	l_acel.z = l_acel_dic['z'] - acc_mean[2] + 9.81
+	l_acel.z = l_acel_dic['z'] - acc_mean[2]
 	i.linear_acceleration = l_acel
 	i.linear_acceleration_covariance = [acc_var[0], 0., 0.,
 										0., acc_var[1], 0.,
@@ -43,7 +43,7 @@ def get_data():
 
 def pub_imu_data():
 	rospy.init_node('imu_mpu',anonymous=True)
-	imu_pub = rospy.Publisher('imu/data',Imu, queue_size = 1)
+	imu_pub = rospy.Publisher('/imu/data',Imu, queue_size = 1)
 	rate = rospy.Rate(10)
 	while not rospy.is_shutdown():
 		msg = get_data()
@@ -56,3 +56,4 @@ if __name__ == '__main__':
 		pub_imu_data()
 	except rospy.ROSInterruptException:
 		pass
+

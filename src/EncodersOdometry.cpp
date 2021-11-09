@@ -15,13 +15,13 @@ class Odom_class{
         tf::Transform transform;
         ros::Time current_time, last_time;
         geometry_msgs::Quaternion odom_quat;
-        float dt, x ,y, z, vl, va, L, R, theta;
+        double dt, x ,y, z, vl, va, vx, vy, L, R, dtheta, theta;
 
     public:
         Odom_class(){
 
-            speed_sub = nh.subscribe("/speed",1000,&Odom_class::encodersCallback,this);
-            odom_pub = nh.advertise<nav_msgs::Odometry>("wheel_encoders/odom",1000);
+            speed_sub = nh.subscribe("/wheels_speed",1,&Odom_class::encodersCallback,this);
+            odom_pub = nh.advertise<nav_msgs::Odometry>("/wheel_encoders/odom",1000);
             last_time = ros::Time::now();
             nh.getParam("/robot_base_L",L);
             theta = 0;
@@ -31,7 +31,10 @@ class Odom_class{
             z = 0;
             va = 0;
             vl = 0;
-	ROS_INFO("%s","Inner class constructor entered\n");
+            vx = 0;
+            vy = 0;
+            dtheta = 0;
+	        ROS_INFO("%s","Inner class constructor entered\n");
         }
 
 
@@ -43,9 +46,12 @@ class Odom_class{
         R = (L* (msg->vector.y + msg->vector.x) )/(2 * (msg->vector.y - msg->vector.x) );
         vl = (msg->vector.y + msg->vector.x) / 2;
 
-        theta = theta + va * dt;
-        x = x + vl * cos(theta) * dt;
-        y = y + vl * sin(theta) * dt;
+        dtheta = va * dt;
+        theta = theta + dtheta;
+        vx = vl * cos(theta);
+        vy = vl * sin(theta);
+        x = x + vx * dt;
+        y = y + vy * dt;
 
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
@@ -58,7 +64,8 @@ class Odom_class{
         odom.pose.pose.position.z = z;
         odom.pose.pose.orientation = odom_quat;
         //set velocity
-        odom.twist.twist.linear.x = vl;
+        odom.twist.twist.linear.x = vx;
+        odom.twist.twist.linear.y = vy;
         odom.twist.twist.angular.z = va;
 
         odom_pub.publish(odom);
@@ -67,14 +74,14 @@ class Odom_class{
         transform.setOrigin(tf::Vector3(x,y,z));
         q.setRPY(0,0,theta);
         transform.setRotation(q);
-        //tf_pub.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "robot_odom_base"));
+        tf_pub.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "robot_odom_base"));
  }
 
 };
 
 int main(int argc, char **argv){
 
-    ros::init(argc,argv,"OdometryPosition");
+    ros::init(argc,argv,"EncodersOdometry");
     Odom_class my_odom_class;
     ros::spin();
     return 0;

@@ -14,5 +14,5 @@ catkin_package()
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(OdometryPosition src/OdometryPosition.cpp)
-target_link_libraries(OdometryPosition ${catkin_LIBRARIES})
+add_executable(EncodersOdometry src/EncodersOdometry.cpp)
+target_link_libraries(EncodersOdometry ${catkin_LIBRARIES})
