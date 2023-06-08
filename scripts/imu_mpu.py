@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 from mpu6050 import mpu6050
 from sensor_msgs.msg import Imu
@@ -10,10 +10,10 @@ def get_data():
 	#sensor.set_accel_range(accel_range=sensor.ACCEL_RANGE_2G)
 	#sensor.set_gyro_range(gyro_range=sensor.GYRO_RANGE_250DEG)
 
-	acc_mean = [0.6995122561825856, 0.13567193821975915, 9.721960112000165]
-	acc_var = [0.0014298346317537685, 0.003488776651191735, 0.004005896867499097]
-	gyr_mean = [-3.201630522419838, 0.8785332246412229, -3.2426313427938864] 
-	gyr_var = [0.00645090062771555, 0.006565394554497192, 0.005613595184040882] 
+	acc_mean = [0.0,0.0,0.0] #[0.6995122561825856, 0.13567193821975915, 9.721960112000165]
+	acc_var = [0.0,0.0,0.0]  #[0.0014298346317537685, 0.003488776651191735, 0.004005896867499097]
+	gyr_mean = [0.0,0.0,0.0] #[-3.201630522419838, 0.8785332246412229, -3.2426313427938864] 
+	gyr_var = [0.0,0.0,0.0] #[0.00645090062771555, 0.006565394554497192, 0.005613595184040882] 
 
 	i = Imu()
 	i.header.stamp = rospy.Time.now()
@@ -43,7 +43,7 @@ def get_data():
 
 def pub_imu_data():
 	rospy.init_node('imu_mpu',anonymous=True)
-	imu_pub = rospy.Publisher('/imu/data',Imu, queue_size = 1)
+	imu_pub = rospy.Publisher('/imu_data',Imu, queue_size = 1)
 	rate = rospy.Rate(10)
 	while not rospy.is_shutdown():
 		msg = get_data()

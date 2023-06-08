@@ -1,7 +1,11 @@
 <launch>
+<arg name="robot_base" default="0.194" />
+
 <node name="arduino" pkg="rosserial_arduino" type="serial_node.py" >
     <param name="port" type="string" value="/dev/ttyACM0"/>
     <param name="baud" type="int" value="57600"/>
+    <param name="robot_base_L" type="double" value="$(arg robot_base)"/>
+
 </node>
 
 <!-- RPLidar-->
@@ -15,17 +19,16 @@
 
 
     <node name="EncodersOdometry" pkg="siryo" type="EncodersOdometry" >
-    <param name="robot_base_L" type="double" value="0.194"/>
+    <param name="robot_base_L" type="double" value="$(arg robot_base)"/>
+    <param name="publish_tf" type="bool" value="true"/>
     </node>
     
-    <node name="imu_node" pkg="siryo" type="imu_mpu.py">
-    </node>
+    <!--node name="imu_node" pkg="siryo" type="imu_mpu.py">
+    </node-->
 
 
-    <node pkg="tf" type="static_transform_publisher" name="robot_link_to_laser" args="-0.02 -0.01 0.13 3.14159265 0 0 robot_link laser 100" />
-    <node pkg="tf" type="static_transform_publisher" name="robot_link_to_imu_base" args="0 0 0 0 0 0 robot_link imu_base 10" />
-
-    <include file="$(find siryo)/launch/localiz.launch" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.03 0.0 0.13 1.571 0 0 base_link laser 100" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu_base" args="0 0 0 0 0 0 base_link imu_base 100" />
 
 </launch>
 

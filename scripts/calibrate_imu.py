@@ -26,7 +26,8 @@ class Calibration:
 			self.gyr_x.append(data.angular_velocity.x)
 			self.gyr_y.append(data.angular_velocity.y)
 			self.gyr_z.append(data.angular_velocity.z)
-		else:
+			print("Received measurement: ", self.count)
+		elif self.count == self.n_samples:
 			self.compute_mean_var()
 
 	def compute_mean_var(self):
@@ -82,7 +83,7 @@ class Calibration:
 
 	def sub_imu_data(self):
 		rospy.init_node('calibrate_imu',anonymous=True)
-		imu_sub = rospy.Subscriber('imu/data',Imu,self.callback)
+		imu_sub = rospy.Subscriber('imu_data',Imu,self.callback)
 		rospy.spin()
 
 if __name__ == '__main__':

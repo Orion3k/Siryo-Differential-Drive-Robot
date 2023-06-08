@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Map server -->
+  <arg name="map_file" default="$(find siryo)/data/maps/casermabis-map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- Localization -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <param name="update_min_d" value="0.5"/>
+    <param name="update_min_a" value="1.0"/>
+  </node>
+</launch>
