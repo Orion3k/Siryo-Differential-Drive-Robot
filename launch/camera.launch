@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera" args="0.5 0.0 0.9 0 0.27 0 base_link camera 100" />
+
+
+  <!--Camera Bridge -->
+  <node name="camera_bridge" pkg="siryo" type="camera_bridge.py"></node>
+  <!--node name="cv_camera_node" pkg="cv_camera" type="cv_camera_node"></node-->
+ </launch>
+

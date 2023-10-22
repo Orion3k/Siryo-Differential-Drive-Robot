@@ -26,7 +26,7 @@ class Odom_class{
             ROS_INFO("%s","Odom Class started \n");
 
             speed_sub = nh.subscribe("/wheels_speed", 1, &Odom_class::encodersCallback, this);
-            odom_pub = nh.advertise<nav_msgs::Odometry>("/odom",100);
+            odom_pub = nh.advertise<nav_msgs::Odometry>("/wheel_encoders/odom",100);
             robot_wheelbase = 0.194;
             nh.getParam("/robot_base_L",robot_wheelbase);
             nh.getParam("/publish_tf",publishTF);
@@ -53,6 +53,7 @@ class Odom_class{
             tf_trans.transform.translation.z = 0;
             tf_trans.transform.rotation = tf::createQuaternionMsgFromYaw(0);
             tf_pub.sendTransform(tf_trans);
+
         }
 
 
@@ -151,6 +152,6 @@ class Odom_class{
 int main(int argc, char **argv){
     ros::init(argc,argv,"EncodersOdometry");
     Odom_class my_odom_class;
-    my_odom_class.loop(10);
+    my_odom_class.loop(20);
     return 0;
 }

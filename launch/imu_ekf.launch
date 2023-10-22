@@ -1,0 +1,26 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu_base" args="0 0 0 0 -0.0872665 0 base_link imu 100" />
+
+    <node name="imu_node" pkg="siryo" type="imu_mpu.py">
+      <param name="acc_mean_x" type="double" value="0.2148" />
+      <param name="acc_mean_y" type="double" value="0.1520" />
+      <param name="acc_mean_z" type="double" value="-0.4913" />
+      <param name="gyro_mean_x" type="double" value="-2.6233" />
+      <param name="gyro_mean_y" type="double" value="-0.2049" />
+      <param name="gyro_mean_z" type="double" value="-2.5347" />
+    </node>
+
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+      <param name="output_frame" value="odom"/>
+      <param name="base_footprint_frame" value="base_link"/>
+      <param name="freq" value="20.0"/>
+      <param name="sensor_timeout" value="1.0"/>
+      <param name="odom_used" value="true"/>
+      <param name="imu_used" value="true"/>
+      <param name="vo_used" value="false"/>
+      <param name="gps_used" value="false"/>
+      <param name="debug" value="false"/>
+      <param name="self_diagnose" value="false"/>
+    </node>
+ </launch>
+

@@ -1,0 +1,8 @@
+<launch>
+    <!-- launch siryo core nodes-->
+    <include file="$(find siryo)/launch/core_launcher.launch" />
+
+    <!-- launch teleop keyboard commands-->
+    <include file="$(find siryo)/launch/keyboard.launch" />
+
+</launch>

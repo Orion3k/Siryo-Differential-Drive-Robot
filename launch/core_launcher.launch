@@ -8,7 +8,7 @@
 
 </node>
 
-<!-- RPLidar-->
+  <!-- RPLidar-->
   <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
   <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
   <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
@@ -17,18 +17,17 @@
   <param name="angle_compensate"    type="bool"   value="true"/>
   </node>
 
-
-    <node name="EncodersOdometry" pkg="siryo" type="EncodersOdometry" >
+  <!-- wheels encoders odometry-->
+  <remap from="wheel_encoders/odom" to="odom" />
+  <node name="EncodersOdometry" pkg="siryo" type="EncodersOdometry" >
     <param name="robot_base_L" type="double" value="$(arg robot_base)"/>
     <param name="publish_tf" type="bool" value="true"/>
-    </node>
-    
-    <!--node name="imu_node" pkg="siryo" type="imu_mpu.py">
-    </node-->
+  </node>
+
+  <include file="$(find siryo)/launch/camera.launch" />
 
 
-    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.03 0.0 0.13 1.571 0 0 base_link laser 100" />
-    <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu_base" args="0 0 0 0 0 0 base_link imu_base 100" />
-
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.03 0.0 0.13 1.571 0 0 base_link laser 100" />
 </launch>
+
 
